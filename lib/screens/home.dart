@@ -80,12 +80,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   return 
                  GestureDetector(
                   onTap:() {
-                    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DetailScreen(description: task['description']),
-      ),
-    );
+      Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => DetailScreen(
+      uid: uid,
+      taskId: docs![index].id, // Pass the document ID
+      description: task['description'],
+    ),
+  ),
+);
+
                   },
                    child: Container(
                    margin: EdgeInsets.only(bottom: 10),
@@ -156,24 +161,107 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-class DetailScreen extends StatelessWidget {
+// class DetailScreen extends StatelessWidget {
+//   final String description;
+
+//   const DetailScreen({Key? key, required this.description}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//        backgroundColor: Color(0xff28284d),
+//       appBar: AppBar(
+//         title: Text('Description'),
+//         backgroundColor: Color(0xfffa7a40),
+//       ),
+//       body: Padding(
+//         padding: EdgeInsets.all(16.0),
+//         child: Text(
+//           description,
+//           style: GoogleFonts.roboto(fontSize: 18, color: Colors.white),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class DetailScreen extends StatefulWidget {
+  final String uid;
+  final String taskId;
   final String description;
 
-  const DetailScreen({Key? key, required this.description}) : super(key: key);
+  const DetailScreen({
+    Key? key,
+    required this.uid,
+    required this.taskId,
+    required this.description,
+  }) : super(key: key);
+
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  late TextEditingController _descriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _descriptionController = TextEditingController(text: widget.description);
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  void _updateDescription() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(widget.uid)
+          .collection('mytask')
+          .doc(widget.taskId)
+          .update({'description': _descriptionController.text});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Description updated')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update description')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Color(0xff28284d),
+      backgroundColor: Color(0xff28284d),
       appBar: AppBar(
         title: Text('Description'),
         backgroundColor: Color(0xfffa7a40),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Text(
-          description,
-          style: GoogleFonts.roboto(fontSize: 18, color: Colors.white),
+        child: Column(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _descriptionController,
+                decoration: null,
+                style: GoogleFonts.roboto(fontSize: 18, color: Colors.white),
+                maxLines: null, // Allow multiple lines for the description
+                keyboardType: TextInputType.multiline,
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _updateDescription,
+              child: Text('Save'),
+            ),
+          ],
         ),
       ),
     );
