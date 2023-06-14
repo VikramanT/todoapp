@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "340722789772",
+    "project_id": "dark-dcfc0",
+    "storage_bucket": "dark-dcfc0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340722789772:android:7962943561c11c75017aa9",
+        "android_client_info": {
+          "package_name": "com.example.dark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340722789772-1mcvaa62j3rqfqbnqa481ccoh8bsr2ve.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQDngZQ2teGzjYHLgl9PyUxYL-AoKVFyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340722789772-1mcvaa62j3rqfqbnqa481ccoh8bsr2ve.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
